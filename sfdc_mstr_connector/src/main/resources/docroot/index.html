@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>Starter Template - Materialize</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="./css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  </head>
+  <body>
+
+    <div class="section no-pad-bot" id="index-banner">
+      <div class="container">
+        <div class="row center">
+            <img alt="salesforce logo" width="10%" height="10%" class="salesforce-logo" src="https://seeklogo.com/images/S/salesforce-logo-273F95FE60-seeklogo.com.png">
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <div class="section">
+        <div class="row">
+            <div class="modal-content">
+              <ul id="tabs-swipe-demo" class="tabs">
+                <li class="tab tab1 col s3"><a href="#test-swipe-1">1. Connection</a></li>
+                <li class="tab tab2 col s3 disabled"><a href="#test-swipe-2">2. Types</a></li>
+                <li class="tab tab3 col s3 disabled"><a href="#test-swipe-3">3. Attributes</a></li>
+                <li class="tab tab4 col s3 disabled"><a href="#test-swipe-4">4. Preview</a></li>
+              </ul>
+              <br>
+              <div id="test-swipe-1" class="col s12">
+                <form class="col s12">
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="username" type="text" class="validate">
+                      <label for="username">User Name</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="password" type="password" class="validate">
+                      <label for="password">Password</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="token" type="text" class="validate">
+                      <label for="token">Token</label>
+                    </div>
+                  </div>
+                  <div class="row right-align">
+                      <a class="waves-effect waves-light btn" onclick="step1To2(this)">
+                        <i class="material-icons left hide">check</i>
+                        <span>Next</span>
+                        <div id="nav-next-loader" class="preloader-wrapper smaller active hide">
+                          <div class="spinner-layer">
+                            <div class="circle-clipper left">
+                              <div class="circle"></div>
+                            </div><div class="gap-patch">
+                              <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                              <div class="circle"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                  </div>
+                </form>
+              </div>
+              <div id="test-swipe-2" class="col s12" style="height:100%;">
+                <div id="objectList" class="row hide" style="height: 300px; overflow: auto;">
+                  <div class="collection"></div>
+                </div>
+                <div id="navigation2to3" class="row right-align hide">
+                  <a class="waves-effect waves-light btn" onclick="step2To3(this)">Next</a>
+                </div>
+              </div>
+              <div id="test-swipe-3" class="col s12">
+                <div id="attributesList" class="row hide" style="height: 300px; overflow: auto;">
+                  <div class="collection"></div>
+                </div>
+                <div id="navigation3to4" class="row right-align hide">
+                  <a class="waves-effect waves-light btn" onclick="step3To4(this)">Next</a>
+                </div>
+              </div>
+              <div id="test-swipe-4" class="col s12">
+                  <div id="summaryContent" class="row hide" style="height: 300px; overflow: auto;">
+                    <table id="summaryTable" class="striped">
+                      <thead>
+                        <tr></tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div id="navigationFinish" class="row right-align hide">
+                    <a class="waves-effect waves-light btn" id="submitButton">Save <i class="material-icons right">send</i></a>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- LOADER TEMPLATE -->
+    <div id="loader" class="valign-wrapper hide" style="height:100%;">
+      <div class="center-align" style="width:100%;">
+        <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-blue-only">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- OBJECT ITEM TEMPLATE -->
+    <a id="objectTypeItemTemplate" class="collection-item waves-effect waves-light hide">Item Template</a>
+    <!-- ATTRIBUTE ITEM TEMPLATE -->
+    <a id="attributeItemTemplate" class="collection-item waves-effect waves-light hide">Item Template</a>
+    
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="./js/materialize.js"></script>
+    <script src="./js/init.js"></script>
+    <script src="./mstrgdc-1.0.js"></script>
+    <script src="./sfdc.js"></script>
+    <script>
+
+      var APIHost = "http://sfdc-mstr-connector.cloudhub.io/api/";
+
+      $(document).ready(function(){
+        // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+        $('ul.tabs').tabs();
+      });
+      
+      var selectedType = null;
+      var selectedAttributes = new Array();
+
+      var types = null;
+      var attributes = null;
+      
+      function step1To2(elem){
+        $(elem).addClass("disabled");
+        $(elem).find("span").addClass("hide");
+        $(elem).find("#nav-next-loader").removeClass("hide");
+        
+        //ajax response simulator
+        if(selectedType == null){
+          setTimeout(function(elem){
+            $(elem).find("i").removeClass("hide");
+            $(elem).find("span").removeClass("hide");
+            $(elem).find("#nav-next-loader").addClass("hide");
+            
+            $(".tab.tab2").removeClass("disabled");
+
+            loadObjects();
+
+            setTimeout(function(){
+              $(elem).removeClass("disabled");
+              $(elem).find("i").addClass("hide");
+            }, 2000, elem);
+            $('ul.tabs').tabs('select_tab', 'test-swipe-2');
+          }, 2000, elem);
+        }
+      }
+
+      function step2To3(elem){
+        if(selectedType != null){
+          $(".tab.tab3").removeClass("disabled");
+          $('ul.tabs').tabs('select_tab', 'test-swipe-3');
+          loadAttributes();
+        }
+      }
+
+      function step3To4(elem){
+        if(selectedAttributes.length > 0){
+          $(".tab.tab4").removeClass("disabled");
+          $('ul.tabs').tabs('select_tab', 'test-swipe-4');
+        }
+        loadPreview();
+      }
+
+      function loadObjects(){
+        var loader = $( "#loader" ).clone();
+        loader.appendTo( "#test-swipe-2" );
+        loader.removeClass("hide");
+        
+        //ajax response simulator
+        $.ajax(APIHost + "sobjects").done(function(data) {
+          types = data;
+          var itemTemplate = $("#objectTypeItemTemplate");
+          for(var i = 0; i < types.length; i++ ){
+            var item = itemTemplate.clone();
+            item.removeClass("hide");
+            item.attr("id", types[i]);
+            item.text(types[i]);
+            item.appendTo("#objectList .collection");
+          }
+          
+          loader.remove();
+          $("#objectList").removeClass("hide");
+          $("#navigation2to3").removeClass("hide");
+
+          $("#objectList .collection a.collection-item").mouseup(function(e){
+            var isActive = $(this).hasClass("active");
+            if(!isActive){
+              clearAttributes();
+              $("#objectList .collection a.collection-item.active").removeClass("active");
+              $(this).addClass("active");
+              selectedType = $(this).attr("id");
+            }
+          });
+        });
+
+
+      }
+
+      function loadAttributes(){
+        var loader = $( "#loader" ).clone();
+        loader.appendTo( "#test-swipe-3" );
+        loader.removeClass("hide");
+
+        //ajax response simulator
+        $.ajax(APIHost + "sobjects/" + selectedType).done(function(data) {
+          attributes = data;
+          var itemTemplate = $("#attributeItemTemplate");
+          for(var i = 0; i < attributes.length; i++ ){
+            var item = itemTemplate.clone();
+            item.removeClass("hide");
+            item.attr("id", attributes[i]);
+            item.text(attributes[i]);
+            item.appendTo("#attributesList .collection");
+          }
+          
+          loader.remove();
+          $("#attributesList").removeClass("hide");
+          $("#navigation3to4").removeClass("hide");
+
+          $("#attributesList .collection a.collection-item").mouseup(function(e){
+            var isActive = $(this).hasClass("active");
+            if(!isActive){
+              $(this).addClass("active");
+              selectedAttributes.push($(this).attr("id"));
+              clearPreview();
+            }
+            else{
+              $(this).removeClass("active");
+              var indexToRemove = selectedAttributes.indexOf($(this).attr("id"));
+              if (indexToRemove > -1) {
+                selectedAttributes.splice(indexToRemove, 1);
+              }
+              clearPreview();
+            }
+          });
+        });
+
+      }
+
+      function loadPreview(){
+        var loader = $( "#loader" ).clone();
+        loader.appendTo( "#test-swipe-4" );
+        loader.removeClass("hide");
+
+        var query = "";
+        for(var i = 0; i < selectedAttributes.length; i++){
+          var att = selectedAttributes[i];
+          $("#summaryTable thead tr").append("<td>"+att+"</td>");
+          if(query != ""){
+            query += ",";
+          }
+          query += att;
+        }
+        
+        $.ajax(APIHost + "sobjects/" + selectedType + "/data?querylist=" +  encodeURI(query)).done(function(data, info) {
+          for(var i = 0; i < data.length; i++){
+            var sampleItem = data[i];
+            var row = $("<tr></tr>");
+            for(var j = 0; j<selectedAttributes.length; j++){
+              var col = $("<td>"+sampleItem[selectedAttributes[j]]+"</td>");
+              col.appendTo(row);
+            }
+            row.appendTo("#summaryTable tbody");
+          }
+          loader.remove();
+          $("#summaryContent").removeClass("hide");
+          $("#navigationFinish").removeClass("hide");
+        });
+
+      }
+
+      function clearObjects(){
+        $("#objectList").addClass("hide");
+        $("#navigation2to3").addClass("hide");
+        selectedType = null;
+        $("#objectList .collection").empty();
+        $(".tab.tab2").addClass("disabled");
+      }
+
+      function clearAttributes(){
+        $("#attributesList").addClass("hide");
+        $("#navigation3to4").addClass("hide");
+        selectedAttributes = new Array();
+        $("#attributesList .collection").empty();
+        $(".tab.tab3").addClass("disabled");
+      }
+
+      function clearPreview(){
+        $("#summaryTable thead tr").empty();
+        $("#summaryTable tbody").empty();
+        $("#summaryContent").addClass("hide");
+        $("#navigationFinish").addClass("hide");
+      }
+
+    </script>
+  </body>
+</html>

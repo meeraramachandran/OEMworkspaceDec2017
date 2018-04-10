@@ -1,0 +1,62 @@
+#%RAML 1.0
+title: salesforce connector
+version: '1.0'
+mediaType: application/json
+protocols:
+  - HTTP
+baseUri: https://mocksvc.mulesoft.com/mocks/53553f8e-df7f-4636-917a-1d592d4472d0/salesforceconnector # baseUri: /salesforceconnector
+/connection:
+  description: Provide salesforce credentials to establish connection
+  post:
+    description: Provide credentials to connect to salesforce
+    queryParameters:
+      username:
+        example: username
+        description: Property description
+        type: string
+      password:
+        example: password
+        description: Property description
+        type: string
+      securitytoken:
+        example: sectoken
+        description: Property description
+        type: string
+    responses:
+      '200': 
+        body: 
+          application/json:
+            
+/sobjects:
+  description: Salesforce objects available in the Salesforce instance you are connecting to.
+  get:
+    description: Get the list of all Salesforce Objects
+    responses:
+      '200':
+        body:
+          application/json:
+
+  /{object-type}:
+    description: Operate on user selected salesforce object type
+    get:
+      description: Get the list of attributes for the user selected salesforce object
+      responses:
+        '200':
+          body:
+            application/json:
+    /data:
+      description:  Data from the salesforce object. 
+      get:
+        description: Get data from salesforce object for the user selected list of attributes
+        responses:
+          '200':
+            body:
+              application/json:
+                type: nil
+        queryParameters:
+          querylist:
+            example: 'Name,BillingCity'
+            description: list of attributes to query - comma separated
+            type: string
+
+    

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
+    <http:listener-config name="sfconnector-httpListenerConfig" host="0.0.0.0" port="8084" doc:name="HTTP Listener Configuration" />
+    <apikit:config name="sfconnector-config" raml="sfconnector.raml" consoleEnabled="false" doc:name="Router" />
+    <sfdc:config name="Salesforce__Basic_Authentication" username="meera@mulesoft.com" password="Mule1357" securityToken="5GDmwiDZSB8VzwdZ1CtBuUFDk" doc:name="Salesforce: Basic Authentication" />
+    <api-platform-gw:api apiName="MSTR SFDC Connector API" version="1.0" flowRef="sfconnector-main" create="true" apikitRef="sfconnector-config" doc:name="API Autodiscovery"/>
+    <flow name="sfconnector-main">
+        <http:listener config-ref="sfconnector-httpListenerConfig" path="/api/*" doc:name="HTTP" />
+        <apikit:router config-ref="sfconnector-config" doc:name="APIkit Router" />
+        <exception-strategy ref="sfconnector-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy" />
+    </flow>
+    <flow name="sfconnector-console">
+        <http:listener config-ref="sfconnector-httpListenerConfig" path="/console/*" doc:name="HTTP" />
+        <apikit:console config-ref="sfconnector-config" doc:name="APIkit Console" />
+    </flow>
+    <flow name="get:/sobjects:sfconnector-config">
+        <sfdc:describe-global config-ref="Salesforce__Basic_Authentication" doc:name="Salesforce" />
+        <!--         <sfdc:describe-sobject config-ref="Salesforce__Basic_Authentication" type="Account" doc:name="Salesforce"/> -->
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload.sobjects.name]]></dw:set-payload>
+        </dw:transform-message>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="get:/sobjects/{object-type}:sfconnector-config">
+        <sfdc:describe-sobject config-ref="Salesforce__Basic_Authentication" type="#[flowVars.'object-type']" doc:name="Salesforce" />
+        <dw:transform-message doc:name="Transform Message">
+            <dw:input-payload doc:sample="sample_data/map.dwl"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%var fields = payload.fields.name
+---
+fields when (fields contains 'Id') otherwise (fields + 'Id')]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="post:/connection:sfconnector-config">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Update connection" />
+    </flow>
+    <flow name="get:/sobjects/{object-type}/data:sfconnector-config">
+ <sfdc:query config-ref="Salesforce__Basic_Authentication" query="dsql:SELECT #[message.inboundProperties.'http.query.params'.querylist] FROM #[flowVars.'object-type'] LIMIT 10" doc:name="Salesforce" />
+        <dw:transform-message doc:name="Transform Message">
+            <dw:input-payload/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map (
+	$ - 'type'
+)]]></dw:set-payload>
+        </dw:transform-message>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <logger message="#[payload:java.lang.String]" level="INFO" doc:name="Logexception"/>
+            <set-payload value="Unable to process your request due to an issue with the parameters provided. " doc:name="Set Exception Message"/>
+        </catch-exception-strategy>    </flow>
+    <apikit:mapping-exception-strategy name="sfconnector-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property" />
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload" />
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

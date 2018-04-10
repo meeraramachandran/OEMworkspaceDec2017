@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+       <flow name="connector-page">
+        <http:listener config-ref="sfconnector-httpListenerConfig" path="/sfdc-connector/*" doc:name="Salesforce Page Connector"/>
+        <logger message="${app.home}" level="INFO" doc:name="Logger"/>
+        <http:static-resource-handler resourceBase="${app.home}/classes/docroot" defaultFile="index.html" doc:name="Return the connector configuration page"/>
+    </flow>
+</mule>
