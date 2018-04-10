@@ -703,3 +703,71 @@ java.io.IOException: Server returned HTTP response code: 403 for URL: https://ex
 
 !ENTRY org.mule.tooling.core 1 0 2018-04-10 07:10:35.842
 !MESSAGE While generating classpath found that /Users/meera.ramachandran/mulesoft/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/endorsed/ is not a directory.
+
+!ENTRY org.mule.tooling.core 1 0 2018-04-10 07:13:57.267
+!MESSAGE While generating classpath found that /Users/meera.ramachandran/mulesoft/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/endorsed/ is not a directory.
+
+!ENTRY org.mule.tooling.core 1 0 2018-04-10 07:13:57.267
+!MESSAGE While generating classpath found that /Users/meera.ramachandran/mulesoft/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/endorsed/ is not a directory.
+
+!ENTRY org.mule.tooling.core 1 0 2018-04-10 07:13:57.362
+!MESSAGE While generating classpath found that /Users/meera.ramachandran/mulesoft/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/endorsed/ is not a directory.
+
+!ENTRY org.mule.tooling.core 1 0 2018-04-10 07:13:57.362
+!MESSAGE While generating classpath found that /Users/meera.ramachandran/mulesoft/AnypointStudio.app/Contents/Eclipse/plugins/org.mule.tooling.server.3.9.0.ee_6.4.1.201710111930/mule/lib/endorsed/ is not a directory.
+
+!ENTRY org.mule.tooling.eventBus 4 0 2018-04-10 07:13:57.462
+!MESSAGE Unexpected error.
+!STACK 0
+java.lang.NullPointerException
+	at org.mule.tooling.ui.modules.core.metadata.action.GetInputOutputMetadata.processMetadata(GetInputOutputMetadata.java:66)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation$2.call(BaseGetMetadataOperation.java:120)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation$2.call(BaseGetMetadataOperation.java:1)
+	at org.mule.tooling.utils.SilentRunner.run(SilentRunner.java:25)
+	at org.mule.tooling.core.StudioDesignContextRunner.runSilentWithMuleProject(StudioDesignContextRunner.java:17)
+	at org.mule.tooling.core.StudioDesignContextRunner.runSilentWithMuleProject(StudioDesignContextRunner.java:37)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation.run(BaseGetMetadataOperation.java:96)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue$1.run(DataSenseSerialProcessQueue.java:135)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.mule.tooling.eventBus 4 0 2018-04-10 07:13:57.462
+!MESSAGE Unexpected error.
+!STACK 0
+java.lang.NullPointerException
+	at org.mule.tooling.ui.modules.core.metadata.action.GetInputOutputMetadata.processMetadata(GetInputOutputMetadata.java:66)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation$2.call(BaseGetMetadataOperation.java:120)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation$2.call(BaseGetMetadataOperation.java:1)
+	at org.mule.tooling.utils.SilentRunner.run(SilentRunner.java:25)
+	at org.mule.tooling.core.StudioDesignContextRunner.runSilentWithMuleProject(StudioDesignContextRunner.java:17)
+	at org.mule.tooling.core.StudioDesignContextRunner.runSilentWithMuleProject(StudioDesignContextRunner.java:37)
+	at org.mule.tooling.ui.modules.core.metadata.action.BaseGetMetadataOperation.run(BaseGetMetadataOperation.java:96)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue$1.run(DataSenseSerialProcessQueue.java:135)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.mule.tooling.ui.modules.core 4 2 2018-04-10 07:13:57.463
+!MESSAGE Problems occurred when invoking code from plug-in: "org.mule.tooling.ui.modules.core".
+!STACK 0
+java.lang.NullPointerException
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue.getMetadataOperationResult(DataSenseSerialProcessQueue.java:280)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue.access$4(DataSenseSerialProcessQueue.java:275)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue$2.done(DataSenseSerialProcessQueue.java:209)
+	at org.eclipse.core.internal.jobs.JobListeners$3.notify(JobListeners.java:42)
+	at org.eclipse.core.internal.jobs.JobListeners.doNotify(JobListeners.java:113)
+	at org.eclipse.core.internal.jobs.JobListeners.done(JobListeners.java:151)
+	at org.eclipse.core.internal.jobs.JobManager.endJob(JobManager.java:694)
+	at org.eclipse.core.internal.jobs.WorkerPool.endJob(WorkerPool.java:105)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:72)
+
+!ENTRY org.mule.tooling.ui.modules.core 4 2 2018-04-10 07:13:57.501
+!MESSAGE Problems occurred when invoking code from plug-in: "org.mule.tooling.ui.modules.core".
+!STACK 0
+java.lang.NullPointerException
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue.getMetadataOperationResult(DataSenseSerialProcessQueue.java:280)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue.access$4(DataSenseSerialProcessQueue.java:275)
+	at org.mule.tooling.ui.modules.core.metadata.queue.DataSenseSerialProcessQueue$2.done(DataSenseSerialProcessQueue.java:209)
+	at org.eclipse.core.internal.jobs.JobListeners$3.notify(JobListeners.java:42)
+	at org.eclipse.core.internal.jobs.JobListeners.doNotify(JobListeners.java:113)
+	at org.eclipse.core.internal.jobs.JobListeners.done(JobListeners.java:151)
+	at org.eclipse.core.internal.jobs.JobManager.endJob(JobManager.java:694)
+	at org.eclipse.core.internal.jobs.WorkerPool.endJob(WorkerPool.java:105)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:72)

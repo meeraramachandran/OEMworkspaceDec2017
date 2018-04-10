@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
     <http:listener-config name="sfconnector-httpListenerConfig" host="0.0.0.0" port="8084" doc:name="HTTP Listener Configuration" />
     <apikit:config name="sfconnector-config" raml="sfconnector.raml" consoleEnabled="false" doc:name="Router" />
-    <sfdc:config name="Salesforce__Basic_Authentication" username="example@mulesoft.com" password="ghfjhkjkj" securityToken="fgghfgkjhkjlj" doc:name="Salesforce: Basic Authentication" />
+    <sfdc:config name="Salesforce__Basic_Authentication" username="meera@mulesoft.com" password="Mule1357" securityToken="5GDmwiDZSB8VzwdZ1CtBuUFDk" doc:name="Salesforce: Basic Authentication" />
     <api-platform-gw:api apiName="MSTR SFDC Connector API" version="1.0" flowRef="sfconnector-main" create="true" apikitRef="sfconnector-config" doc:name="API Autodiscovery"/>
     <flow name="sfconnector-main">
         <http:listener config-ref="sfconnector-httpListenerConfig" path="/api/*" doc:name="HTTP" />
